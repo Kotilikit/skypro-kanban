@@ -7,7 +7,7 @@ function Column({ title, cardList }) {
         <p>{title}</p>
       </div>
       <div className="cards">
-        {cardList.map((card) => <Card topic={card.theme} title={card.theme} key={card.id} />)}
+        {cardList.map((card) => <Card topic={card.theme} title={card.theme} date={card.date} key={card.id} />)}
         {/* <Card topic={"Web design"} title={"Новая задача"} />
         <Card topic={"Research"} title={""} />
         <Card topic={"Web design"} title={""} />
