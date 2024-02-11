@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 export const topicStyles = {
     _purple: {
         backgroundColor: "#e9d4ff",
