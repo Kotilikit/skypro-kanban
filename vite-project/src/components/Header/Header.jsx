@@ -1,4 +1,6 @@
 import { useState } from "react"
+import * as S from "./Header.syled";
+import { Container} from "../../styled/common/Common.styled";
 
 function Header({ addCard }) {
   const [isOpened, setIsOpened] = useState(false);
@@ -6,9 +8,9 @@ function Header({ addCard }) {
     setIsOpened((prev) => !prev)
   }
   return (
-    <header className="header">
-      <div className="container">
-        <div className="header__block">
+    <S.StyledHeader>
+      <Container>
+        <S.HeaderBlock>
           <div className="header__logo _show _light">
             <a href="" target="_self">
               <img src="images/logo.png" alt="logo" />
@@ -42,9 +44,9 @@ function Header({ addCard }) {
               </button>
             </div>)}
           </nav>
-        </div>
-      </div>
-    </header>
+        </S.HeaderBlock>
+      </Container>
+    </S.StyledHeader>
   )
 }
 

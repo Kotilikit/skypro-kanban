@@ -53,13 +53,6 @@ body {
   background-color: #F1F1F1;
 }
 
-.container {
-  max-width: 1260px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 30px;
-}
-
 ._hover01:hover {
   background-color: #33399b;
 }
@@ -787,24 +780,6 @@ body {
   display: none;
 }
 
-.header {
-  width: 100%;
-  margin: 0 auto;
-  background-color: #FFFFFF;
-}
-
-.header__block {
-  height: 70px;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  top: 0;
-  left: 0;
-  padding: 0 10px;
-}
-
 .header__logo img {
   width: 85px;
 }
@@ -872,47 +847,6 @@ body {
   padding: 34px;
   text-align: center;
   z-index: 2;
-}
-
-.main {
-  width: 100%;
-  background-color: #EAEEF6;
-}
-
-.main__block {
-  width: 100%;
-  margin: 0 auto;
-  padding: 25px 0 49px;
-}
-
-.main__content {
-  width: 100%;
-  display: flex;
-}
-
-.main__column {
-  width: 20%;
-  margin: 0 auto;
-  display: block;
-}
-
-.column__title {
-  padding: 0 10px;
-  margin: 15px 0;
-}
-
-.column__title p {
-  color: #94A6BE;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.cards {
-  width: 100%;
-  display: block;
-  position: relative;
 }
 
 .cards__item {
