@@ -1,6 +1,8 @@
 import { useState } from "react"
 import * as S from "./Header.syled";
 import { Container} from "../../styled/common/Common.styled";
+import { Link } from "react-router-dom";
+import { appRoutes } from "../../lib/appRoutes";
 
 function Header({ addCard }) {
   const [isOpened, setIsOpened] = useState(false);
@@ -39,9 +41,11 @@ function Header({ addCard }) {
                 <p>Темная тема</p>
                 <input type="checkbox" className="checkbox" name="checkbox" />
               </div>
-              <button type="button" className="_hover03">
-                <a href="#popExit">Выйти</a>
-              </button>
+              <Link to={appRoutes.EXIT}>
+              <span type="button" className="_hover03">
+                Выйти
+              </span>              
+              </Link>
             </div>)}
           </nav>
         </S.HeaderBlock>
