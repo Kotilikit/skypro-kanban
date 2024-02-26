@@ -1,7 +1,28 @@
+import { useState } from 'react'
 import './SigninPage.css'
 import { ModalBtnEnter } from './SigninPage.styled'
+import { Link } from "react-router-dom";
+import { appRoutes } from '../../lib/appRoutes';
+import { signIN } from '../../api';
 
 export default function SigninPage({login}) {
+    const [loginData, setLoginData] = useState({ login: "", password: "" });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target; 
+
+        setLoginData({
+            ...loginData, 
+            [name]: value, 
+        });
+    };
+
+    const handleLogin = async () => {
+        await signIN(loginData).then((data) => {
+            login(data.user);
+        })
+    };
+
     return (
         <div className="wrapper">
             <div className="container-signin">
@@ -12,6 +33,8 @@ export default function SigninPage({login}) {
                         </div>
                         <form className="modal__form-login" id="formLogIn" action="#">
                             <input
+                                value={loginData.login}
+                                onChange={handleInputChange}
                                 className="modal__input"
                                 type="text"
                                 name="login"
@@ -19,16 +42,18 @@ export default function SigninPage({login}) {
                                 placeholder="Эл. почта"
                             />
                             <input
+                                value={loginData.password}
+                                onChange={handleInputChange}
                                 className="modal__input"
                                 type="password"
                                 name="password"
                                 id="formpassword"
                                 placeholder="Пароль"
                             />
-                            <ModalBtnEnter onClick={login}>Войти</ModalBtnEnter>
+                            <ModalBtnEnter onClick={handleLogin}>Войти</ModalBtnEnter>
                             <div className="modal__form-group">
                                 <p>Нужно зарегистрироваться?</p>
-                                <a href="signup.html">Регистрируйтесь здесь</a>
+                                <Link to={appRoutes.SIGNUP}>Зарегистироваться здесь</Link>
                             </div>
                         </form>
                     </div>

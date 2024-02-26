@@ -1,19 +1,14 @@
 import Card from "../Card/Card"
 import * as S from "./Column.styled";
 
-function Column({ title, cardList }) {
+function Column({ title, cardList }) {  
   return (
     <S.MainColumn>
       <S.ColumnTitle>
         <S.TitleP>{title}</S.TitleP>
       </S.ColumnTitle>
       <S.Cards>
-        {cardList.map((card) => <Card topic={card.theme} title={card.theme} date={card.date} key={card.id} id={card.id} />)}
-        {/* <Card topic={"Web design"} title={"Новая задача"} />
-        <Card topic={"Research"} title={""} />
-        <Card topic={"Web design"} title={""} />
-        <Card topic={"Research"} title={""} />
-        <Card topic={"Web design"} title={""} /> */}
+        {cardList.map((task) => <Card topic={task.topic} title={task.title} date={task.date} key={task._id} id={task._id} />)}
       </S.Cards>
     </S.MainColumn>
   )
