@@ -1,10 +1,10 @@
-import { cardList } from "../../data";
 import { useState } from "react"
 import { useEffect } from 'react'
 import Header from '../../components/Header/Header';
 import { MainContent } from '../../components/MainContent/MainContent.styled';
 import Column from '../../components/Column/Column';
 import { Outlet } from "react-router-dom";
+import { getTodos } from "../../api";
 
 const statusList = [
   "Без статуса",
@@ -14,14 +14,20 @@ const statusList = [
   "Готово",
 ];
 
-export default function MainPage() {
-  const [cards, setCards] = useState(cardList);
+export default function MainPage({ user }) {
+  const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
-    setTimeout(() => {
+    getTodos({ token: user.token }).then((todos) => {
+      console.log(todos);
+      setCards(todos.tasks);
       setIsLoading(false);
-    }, 2000);
-  }, []);
+    }).catch((error) => {
+      alert(error)
+    })
+  }, [user])
+
   function addCard() {
     const newCard = {
       id: cards.length + 1,
@@ -35,7 +41,7 @@ export default function MainPage() {
   return (
     <>
       <div className="wrapper">
-        <Outlet/>
+        <Outlet />
         <Header addCard={addCard} />
         {isLoading ? "Загрузка..." : (<MainContent>
           {statusList.map((status) => (
