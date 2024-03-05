@@ -1,5 +1,4 @@
 const baseHost = 'https://wedev-api.sky.pro/api/kanban';
-
 const userHost = 'https://wedev-api.sky.pro/api/user';
 
 // Получить список задач
@@ -19,7 +18,7 @@ export async function getTodos({ token }) {
 }
 
 // Добавить задачу в список
-export async function postTodo(text) {
+export async function postTodo({text, token}) {
     const response = await fetch(baseHost, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -39,7 +38,7 @@ export async function postTodo(text) {
 }
 
 // Изменить задачу
-export async function putTodo({ text, id }) {
+export async function putTodo({ text, id, token }) {
     const response = await fetch(baseHost + `/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +58,7 @@ export async function putTodo({ text, id }) {
 }
 
 // Удалить задачу
-export async function deleteTodo({ text, id }) {
+export async function deleteTodo({ text, id, token }) {
     const response = await fetch(baseHost + `/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -79,7 +78,7 @@ export async function deleteTodo({ text, id }) {
 }
 
 // Получить список пользователя
-export async function getUserList() {
+export async function getUserList(token) {
     const response = await fetch(userHost, {
         headers: {
             Authorization: `Bearer ${token}`,

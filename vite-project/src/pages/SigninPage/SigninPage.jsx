@@ -1,25 +1,29 @@
 import { useState } from 'react'
 import './SigninPage.css'
 import { ModalBtnEnter } from './SigninPage.styled'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { appRoutes } from '../../lib/appRoutes';
 import { signIN } from '../../api';
+import { useUser } from '../../hooks/useUser';
 
-export default function SigninPage({login}) {
+export default function SigninPage() {
+    const { login } = useUser();
+    const navigate = useNavigate();
     const [loginData, setLoginData] = useState({ login: "", password: "" });
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target; 
+        const { name, value } = e.target;
 
         setLoginData({
-            ...loginData, 
-            [name]: value, 
+            ...loginData,
+            [name]: value,
         });
     };
 
     const handleLogin = async () => {
         await signIN(loginData).then((data) => {
             login(data.user);
+            navigate(appRoutes.MAIN);
         })
     };
 
