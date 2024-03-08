@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../lib/appRoutes";
 import Calendar from "../../Calendar/Calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./PopBrowse.styled";
 import { postTodo } from "../../../api";
 import { useTask } from "../../../hooks/useUser";
 
-function PopBrowse() {
+function PopBrowse({ user }) {
   const { putDownTask } = useTask();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
@@ -16,13 +16,34 @@ function PopBrowse() {
     description: "",
     topic: "",
   });
-  const handleFormSubmit = () => {
+
+  const [taskAdded, setTaskAdded] = useState(false);
+
+  const handleFormSubmit = async (user) => {
     const taskData = {
       ...newTask,
       date: selectedDate,
     };
-    console.log(taskData);
+
+    try {
+      const response = await postTodo({
+        task: taskData,
+        token: user.token,
+      });
+
+      putDownTask(response.task);
+      setTaskAdded(true);
+    } catch (error) {
+      console.error("Ошибка при добавлении задачи:", error);
+    }
   };
+
+  useEffect(() => {
+    if (taskAdded) {
+      navigate(appRoutes.MAIN);
+    }
+  }, [taskAdded, navigate]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -32,15 +53,20 @@ function PopBrowse() {
     });
   };
   const handleTask = async () => {
-    await postTodo(newTask).then((data) => {
+    await postTodo({
+      task: newTask,
+      token: user.token,
+    }).then((data) => {
       console.log(data);
       putDownTask(data.task);
-      navigate(appRoutes.MAIN);
+      setTaskAdded(true);
     });
   };
-  const createTaskBtn = () => {
-    handleFormSubmit();
-    handleTask();
+  const createTaskBtn = async () => {
+    if (!taskAdded) {
+      await handleFormSubmit(user);
+      await handleTask(user);
+    }
   };
   return (
     <S.PopNewCard id="popNewCard">

@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 
 function getTaskFromLocalStorage() {
   try {
-    return JSON.parse(localStorage.getItem("user"));
+    return JSON.parse(localStorage.getItem("task"));
   } catch (error) {
     console.log(error);
     return null;
@@ -14,9 +14,9 @@ export const TaskProvider = ({ children }) => {
   const [task, setTask] = useState(getTaskFromLocalStorage());
 
  
-  function putDownTask(newTask) {
-    setTask(newTask);
-    localStorage.setItem("user", JSON.stringify(newTask));
+  function putDownTask(task) {
+    setTask(task);
+    localStorage.setItem("task", JSON.stringify(task));
   }
   return (
     <TaskContext.Provider value={{ task, putDownTask }}>
