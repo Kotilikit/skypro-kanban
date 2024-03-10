@@ -6,5 +6,6 @@ export function useUser() {
     return useContext(UserContext)
 }
 export function useTask() {
-    return useContext(TaskContext)
+    const { putDownTask } = useContext(TaskContext);
+    return { putDownTask };
 }

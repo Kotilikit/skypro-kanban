@@ -1,73 +1,49 @@
 import { Link, useNavigate } from "react-router-dom";
 import { appRoutes } from "../../../lib/appRoutes";
 import Calendar from "../../Calendar/Calendar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as S from "./PopBrowse.styled";
 import { postTodo } from "../../../api";
-import { useTask } from "../../../hooks/useUser";
 
 function PopBrowse({ user }) {
-  const { putDownTask } = useTask();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     topic: "",
   });
 
-  const [taskAdded, setTaskAdded] = useState(false);
-
-  const handleFormSubmit = async (user) => {
+  const handleFormSubmit = async () => {
     const taskData = {
       ...newTask,
       date: selectedDate,
     };
 
     try {
-      const response = await postTodo({
+      await postTodo({
         task: taskData,
         token: user.token,
       });
 
-      putDownTask(response.task);
-      setTaskAdded(true);
+      navigate(appRoutes.MAIN);
     } catch (error) {
       console.error("Ошибка при добавлении задачи:", error);
     }
   };
 
-  useEffect(() => {
-    if (taskAdded) {
-      navigate(appRoutes.MAIN);
-    }
-  }, [taskAdded, navigate]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     setNewTask({
       ...newTask,
       [name]: value,
     });
   };
-  const handleTask = async () => {
-    await postTodo({
-      task: newTask,
-      token: user.token,
-    }).then((data) => {
-      console.log(data);
-      putDownTask(data.task);
-      setTaskAdded(true);
-    });
-  };
+
   const createTaskBtn = async () => {
-    if (!taskAdded) {
-      await handleFormSubmit(user);
-      await handleTask(user);
-    }
+    await handleFormSubmit();
   };
+
   return (
     <S.PopNewCard id="popNewCard">
       <S.PopNewCardContainer>
