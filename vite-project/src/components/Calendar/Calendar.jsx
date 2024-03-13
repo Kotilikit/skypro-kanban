@@ -5,16 +5,16 @@ import ru from "date-fns/locale/ru";
 
 export default function Calendar({ selectedDate, setSelectedDate }) {
 
-    let footer = <p>Пожалуйста, выберите дату</p>;
-    if (selectedDate) {
-        footer = <p>Вы выбрали {format(selectedDate, 'PP', { locale: ru })}.</p>;
-    }
-    return (
-        <DayPicker
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            footer={footer}
-        />
-    );
+  let footer = <p>Пожалуйста, выберите дату</p>;
+  if (selectedDate) {
+    footer = <p>Вы выбрали {format(selectedDate, 'PP', { locale: ru })}.</p>;
+  }
+  return (
+    <DayPicker
+      mode="single"
+      selected={selectedDate}
+      onSelect={setSelectedDate}
+      footer={footer}
+    />
+  );
 }

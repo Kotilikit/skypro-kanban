@@ -6,6 +6,7 @@ import Column from '../../components/Column/Column';
 import { Outlet } from "react-router-dom";
 import { getTodos } from "../../api";
 import { useUser } from "../../hooks/useUser";
+import { Wrapper } from "../../styled/common/Common.styled";
 
 const statusList = [
   "Без статуса",
@@ -18,8 +19,8 @@ const statusList = [
 export default function MainPage() {
   const [cards, setCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true)
-  const {user} = useUser()
-  
+  const { user } = useUser()
+
   useEffect(() => {
     getTodos({ token: user.token }).then((todos) => {
       console.log(todos);
@@ -41,20 +42,22 @@ export default function MainPage() {
     setCards([...cards, newCard])
   }
   return (
-    <>
-      <div className="wrapper">
-        <Outlet />
-        <Header addCard={addCard} />
-        {isLoading ? "Загрузка..." : (<MainContent>
+    <Wrapper>
+      <Outlet />
+      <Header addCard={addCard} />
+      {isLoading ? (
+        "Загрузка..."
+      ) : (
+        <MainContent>
           {statusList.map((status) => (
             <Column
               title={status}
               key={status}
-              cardList={cards.filter((card) => card.status === status)}
+              cardList={cards?.filter((card) => card.status === status) || []}
             />
           ))}
-        </MainContent>)}
-      </div>
-    </>
-  )
+        </MainContent>
+      )}
+    </Wrapper>
+  );
 }
