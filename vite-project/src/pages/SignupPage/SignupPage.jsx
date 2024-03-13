@@ -1,11 +1,14 @@
 import './SignupPage.css'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { appRoutes } from '../../lib/appRoutes';
 import { useState } from 'react';
 import { signUp } from '../../api';
 import { ModalBtnSignUp } from './SignUpPage.styled';
+import { useUser } from '../../hooks/useUser';
 
 export default function RegistrationPage() {
+    const { login } = useUser();
+    const navigate = useNavigate();
     const [registrationData, setRegistrationData] = useState({ login: "", name: "", password: "" });
 
     const handleInputChange = (e) => {
@@ -18,12 +21,10 @@ export default function RegistrationPage() {
     };
 
     const handleRegistration = async () => {
-        try {
-            const userData = await signUp(registrationData);
-            console.log("Пользователь успешно зарегистрирован:", userData);
-        } catch (error) {
-            console.error("Ошибка при регистрации:", error.message);
-        }
+        await signUp(registrationData).then((data) => {
+            login(data.user);
+            navigate(appRoutes.MAIN);
+        })
     };
 
     return (
