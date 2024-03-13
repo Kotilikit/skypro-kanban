@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import './SigninPage.css'
-import { ModalBtnEnter } from './SigninPage.styled'
+import * as S from "./SigninPage.styled.js";
+import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { appRoutes } from '../../lib/appRoutes';
 import { signIN } from '../../api';
 import { useUser } from '../../hooks/useUser';
+import { WrapperSignupSignin } from "../../styled/common/Common.styled.js";
 
 export default function SigninPage() {
     const { login } = useUser();
@@ -28,41 +28,42 @@ export default function SigninPage() {
     };
 
     return (
-        <div className="wrapper">
-            <div className="container-signin">
-                <div className="modal">
-                    <div className="modal__block">
-                        <div className="modal__ttl">
-                            <h2>Вход</h2>
-                        </div>
-                        <form className="modal__form-login" id="formLogIn" action="#">
-                            <input
+        <WrapperSignupSignin>
+            <S.ContainerSignIn>
+                <S.Modal>
+                    <S.ModalBlock>
+                        <S.ModalTtl>Вход</S.ModalTtl>
+                        <S.ModalFormLogin id="formLogIn" action="#">
+                            <S.ModalInput
                                 value={loginData.login}
                                 onChange={handleInputChange}
-                                className="modal__input"
                                 type="text"
                                 name="login"
                                 id="formlogin"
                                 placeholder="Эл. почта"
-                            />
-                            <input
+                            ></S.ModalInput>
+                            <S.ModalInput
                                 value={loginData.password}
                                 onChange={handleInputChange}
-                                className="modal__input"
                                 type="password"
                                 name="password"
                                 id="formpassword"
                                 placeholder="Пароль"
-                            />
-                            <ModalBtnEnter onClick={handleLogin}>Войти</ModalBtnEnter>
-                            <div className="modal__form-group">
-                                <p>Нужно зарегистрироваться?</p>
-                                <Link to={appRoutes.SIGNUP}>Зарегистироваться здесь</Link>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            ></S.ModalInput>
+
+                            <S.ModalBtnEnter
+                                id="btnEnter"
+                                onClick={handleLogin}>
+                                Войти
+                            </S.ModalBtnEnter>
+                            <S.ModalFormGroup>
+                                Нужно зарегистрироваться?
+                                <Link to={appRoutes.SIGNUP}><S.ModalFormGroupA>Регистрируйтесь здесь</S.ModalFormGroupA></Link>
+                            </S.ModalFormGroup>
+                        </S.ModalFormLogin>
+                    </S.ModalBlock>
+                </S.Modal>
+            </S.ContainerSignIn>
+        </WrapperSignupSignin>
     )
 }

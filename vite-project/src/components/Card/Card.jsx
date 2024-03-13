@@ -3,27 +3,27 @@ import { TopicHeader } from '../../lib/topic';
 import * as S from './Card.styled';
 import { appRoutes } from '../../lib/appRoutes';
 
-function Card({ topic, title, date, id }) {
+function Card({ topic, title, date, _id }) {
   return (
-    <div className="cards__item">
-      <div className="cards__card card">
-        <div className="card__group">
-          <S.CardTopic $themeColor={TopicHeader[topic]}>
-            <S.TopicText>{topic}</S.TopicText>
-          </S.CardTopic>
-          <Link to={appRoutes.TASK} target='_self'>
-            <div className="card__btn">
+    <S.CardsItem>
+      <S.CardsCard>
+        <Link to={appRoutes.WATCHTASK} target="_self">
+          <S.CardsGroup>
+            <S.CardTopic $themeColor={TopicHeader[topic]}>
+              <S.TopicText>{topic}</S.TopicText>
+            </S.CardTopic>
+            <S.CardBtn>
               <div />
               <div />
               <div />
-            </div>
+            </S.CardBtn>
+          </S.CardsGroup>
+        </Link>
+        <S.CardContent>
+          <Link to={`watchtask/${_id}`} className="card__title">
+            <S.CardTitle>{title}</S.CardTitle>
           </Link>
-        </div>
-        <div className="card__content">
-          <Link to={`task/${id}`}>
-            <h3 className="card__title">{title}</h3>
-          </Link>
-          <div className="card__date">
+          <S.CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={13}
@@ -53,11 +53,11 @@ function Card({ topic, title, date, id }) {
               </defs>
             </svg>
             <p>{date}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+          </S.CardDate>
+        </S.CardContent>
+      </S.CardsCard>
+    </S.CardsItem>
+  );
 }
 
-export default Card
+export default Card;

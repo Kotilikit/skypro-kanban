@@ -7,7 +7,9 @@ import PrivateRoute from './components/PrivateRoute/PrivateRoute'
 import MainPage from './pages/MainPage/MainPage'
 import TaskPage from './pages/TaskPage/TaskPage'
 import ExitPage from './pages/ExitPage/ExitPage'
-import './App.css'
+import './App.css';
+import EditTask from './pages/EditTaskPage/EditTask'
+import WatchTask from './pages/WatchTaskPage/WatchTask'
 
 export default function App() {
 
@@ -16,6 +18,8 @@ export default function App() {
       <Route element={<PrivateRoute />}>
         <Route path={appRoutes.MAIN} element={<MainPage />}>
           <Route path={appRoutes.TASK} element={<TaskPage />} />
+          <Route path={appRoutes.WATCHTASK} element={<WatchTask />} />
+          <Route path={appRoutes.EDITTASK} element={<EditTask />} />
           <Route path={appRoutes.EXIT} element={<ExitPage />} />
         </Route>
       </Route>
