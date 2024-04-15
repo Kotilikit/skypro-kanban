@@ -1,14 +1,17 @@
 import { useState } from "react"
 import * as S from "./Header.syled";
-import { Button, Container } from "../../styled/common/Common.styled";
+import { Container } from "../../styled/common/Common.styled";
 import { Link } from "react-router-dom";
 import { appRoutes } from "../../lib/appRoutes";
+import { useUser } from "../../hooks/useUser";
 
 function Header() {
+  const { user } = useUser();
   const [isOpened, setIsOpened] = useState(false);
   function togglePopup() {
     setIsOpened((prev) => !prev)
   }
+
   return (
     <S.StyledHeader>
       <Container>
@@ -18,13 +21,8 @@ function Header() {
               <S.HeaderLogoImg src="images/logo.png" alt="logo" />
             </Link>
           </S.HeaderLogoShowLight>
-          <S.HeaderLogoDark>
-            <Link to={"#"} target="_self">
-              <S.HeaderLogoImg src="images/logo_dark.png" alt="logo" />
-            </Link>
-          </S.HeaderLogoDark>
           <S.HeaderNav>
-            <Link to={appRoutes.TASK}>
+            <Link to={`/create`}>
               <S.HeaderBtnMainNew
                 id="btnMainNew"
               >
@@ -32,18 +30,14 @@ function Header() {
               </S.HeaderBtnMainNew>
             </Link>
 
-            <S.HeaderUser onClick={togglePopup}>Ivan Ivanov</S.HeaderUser>
+            <S.HeaderUser onClick={togglePopup}>{user.name}</S.HeaderUser>
             {isOpened && (
               <S.HeaderPopUserSet>
-                <S.PopUserSetName>Ivan Ivanov</S.PopUserSetName>
-                <S.PopUserSetMail>ivan.ivanov@gmail.com</S.PopUserSetMail>
-                <S.PopUserSetTheme>
-                  <S.PopUserSetThemeP>Темная тема</S.PopUserSetThemeP>
-                  <S.PopUserSetThemeInput type="checkbox" name="checkbox" />
-                </S.PopUserSetTheme>
+                <S.PopUserSetName>{user.name}</S.PopUserSetName>
+                <S.PopUserSetMail>{user.login}</S.PopUserSetMail>
                 <Link to={appRoutes.EXIT}>
                   <S.ExitButton>
-                    <Button>Выйти</Button>
+                    Выйти
                   </S.ExitButton>
                 </Link>
               </S.HeaderPopUserSet>

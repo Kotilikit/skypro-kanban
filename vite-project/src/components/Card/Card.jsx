@@ -3,11 +3,11 @@ import { TopicHeader } from '../../lib/topic';
 import * as S from './Card.styled';
 import { appRoutes } from '../../lib/appRoutes';
 
-function Card({ topic, title, date, _id }) {
+function Card({ topic, title, date, id }) {
   return (
     <S.CardsItem>
       <S.CardsCard>
-        <Link to={appRoutes.WATCHTASK} target="_self">
+        <Link to={`task/${id}`}>
           <S.CardsGroup>
             <S.CardTopic $themeColor={TopicHeader[topic]}>
               <S.TopicText>{topic}</S.TopicText>
@@ -20,9 +20,7 @@ function Card({ topic, title, date, _id }) {
           </S.CardsGroup>
         </Link>
         <S.CardContent>
-          <Link to={`watchtask/${_id}`} className="card__title">
             <S.CardTitle>{title}</S.CardTitle>
-          </Link>
           <S.CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"

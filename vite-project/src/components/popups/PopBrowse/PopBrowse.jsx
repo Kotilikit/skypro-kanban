@@ -1,139 +1,224 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { appRoutes } from "../../../lib/appRoutes";
 import Calendar from "../../Calendar/Calendar";
 import { useState } from "react";
 import * as S from "./PopBrowse.styled";
-import { postTodo } from "../../../api";
+import { putTodo, deleteTodo } from "../../../api";
+import { useUser } from "../../../hooks/useUser";
+import { useTask } from "../../../hooks/useTask";
+import { TopicHeader } from "../../../lib/topic";
 
-function PopBrowse({ user }) {
+function PopBrowse() {
+  const { id } = useParams();
+  const { user } = useUser();
+  const { cards, setCards } = useTask();
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-  const [newTask, setNewTask] = useState({
-    title: "",
-    description: "",
-    topic: "",
+  const [isEdited, setIsEdited] = useState(false);
+
+  let card = cards.filter((card) => card._id == `${id}`);
+
+  const [editTask, setEditTask] = useState({
+    title: card[0].title,
+    description: card[0].description,
+    topic: card[0].topic,
+    status: card[0].status,
+    date: card[0].date,
   });
 
-  const handleFormSubmit = async () => {
+  const deleteTask = () => {
+    deleteTodo({ token: user.token, id: id })
+      .then((newCard) => {
+        setCards(newCard.tasks);
+        navigate(appRoutes.MAIN);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error);
+      });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
     const taskData = {
-      ...newTask,
+      ...editTask,
       date: selectedDate,
     };
-
-    try {
-      await postTodo({
-        task: taskData,
-        token: user.token,
+    putTodo({ token: user.token, id: id, taskData: taskData })
+      .then((newCard) => {
+        setCards(newCard.tasks);
+        navigate(appRoutes.MAIN);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error);
       });
-
-      navigate(appRoutes.MAIN);
-    } catch (error) {
-      console.error("Ошибка при добавлении задачи:", error);
-    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewTask({
-      ...newTask,
+    setEditTask({
+      ...editTask,
       [name]: value,
     });
   };
 
-  const createTaskBtn = async () => {
-    await handleFormSubmit();
-  };
-
   return (
-    <S.PopNewCard id="popNewCard">
-      <S.PopNewCardContainer>
-        <S.PopNewCardBlock>
-          <S.PopNewCardContent>
-            <S.PopNewCardTtl>Создание задачи</S.PopNewCardTtl>
-            <Link to={appRoutes.MAIN}>
-              {" "}
-              <S.PopNewCardClose>&#10006;</S.PopNewCardClose>
-            </Link>
-          </S.PopNewCardContent>
+    <S.PopBrowseDiv>
+      <S.PopBrowseСonteinerDiv>
+        <S.PopBrowseBlockDiv>
+          <S.PopBrowseContentDiv>
+            <S.PopBrowseTopBlockDiv>
+              <S.PopBrowseTtl>Название задачи: {card[0].title}</S.PopBrowseTtl>
+              <S.CategoriesThemeDiv $themeColor={TopicHeader[card[0].topic]}>
+                <S.TopicText $themeColor={TopicHeader[card[0].topic]}>
+                  {card[0].topic}
+                </S.TopicText>
+              </S.CategoriesThemeDiv>
+            </S.PopBrowseTopBlockDiv>
+            <S.PopBrowseStatusDiv>
+              <S.StatusPsubTtlP>Статус</S.StatusPsubTtlP>
+              {isEdited && (
+                <S.StatusThemesDiv>
+                  <S.StatusThemeInput
+                    type="radio"
+                    id="radio1"
+                    name="status"
+                    value="Без статуса"
+                    onChange={handleInputChange}
+                  />
+                  <S.StatusThemeLabel htmlFor="radio1">Без статуса</S.StatusThemeLabel>
 
-          <S.PopNewCardWrap>
+                  <S.StatusThemeInput
+                    type="radio"
+                    id="radio2"
+                    name="status"
+                    value="Нужно сделать"
+                    onChange={handleInputChange}
+                  />
+                  <S.StatusThemeLabel htmlFor="radio2">Нужно сделать</S.StatusThemeLabel>
 
-            <S.PopNewCardForm
-              className="form-new"
-              id="formNewCard"
-              action="#"
-            >
-              <S.FormNewBlock>
-                <S.Sbttl htmlFor="formTitle">Название задачи</S.Sbttl>
-                <S.FormNewInput
-                  type="text"
-                  name="title"
-                  value={newTask.title}
-                  onChange={handleInputChange}
-                  id="formTitle"
-                  placeholder="Введите название задачи..."
-                  autoFocus
-                />
-              </S.FormNewBlock>
-              <S.FormNewBlock>
-                <S.Sbttl htmlFor="textArea">Описание задачи</S.Sbttl>
-                <S.FormNewArea
-                  name="description"
-                  value={newTask.description}
-                  onChange={handleInputChange}
-                  id="textArea"
-                  placeholder="Введите описание задачи..."
-                ></S.FormNewArea>
-              </S.FormNewBlock>
-            </S.PopNewCardForm>
+                  <S.StatusThemeInput
+                    type="radio"
+                    id="radio3"
+                    name="status"
+                    value="В работе"
+                    onChange={handleInputChange}
+                  />
+                  <S.StatusThemeLabel htmlFor="radio3">В работе</S.StatusThemeLabel>
 
-            <Calendar
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            />
-          </S.PopNewCardWrap>
+                  <S.StatusThemeInput
+                    type="radio"
+                    id="radio4"
+                    name="status"
+                    value="Тестирование"
+                    onChange={handleInputChange}
+                  />
+                  <S.StatusThemeLabel htmlFor="radio4">Тестирование</S.StatusThemeLabel>
 
-          <S.CategoriesThemes>
-            <S.CategoriesP>Категория</S.CategoriesP>
-          </S.CategoriesThemes>
-          <S.CategoriesThemes>
+                  <S.StatusThemeInput
+                    type="radio"
+                    id="radio5"
+                    name="status"
+                    value="Готово"
+                    onChange={handleInputChange}
+                  />
+                  <S.StatusThemeLabel htmlFor="radio5">Готово</S.StatusThemeLabel>
+                </S.StatusThemesDiv>
+              )}
+              {!isEdited && (
+                <S.StatusThemesDiv>
+                  <S.StatusThemeActiveDiv>{card[0].status}</S.StatusThemeActiveDiv>
+                </S.StatusThemesDiv>
+              )}
+            </S.PopBrowseStatusDiv>
+            <S.PopBrowseWrapDiv>
+              <S.PopBrowseForm>
+                <S.FormBrowseBlockDiv>
+                  <S.SubTtl htmlFor="textArea01">Описание задачи</S.SubTtl>
+                  {!isEdited && (
+                    <S.FormBrowseArea
+                      onChange={handleInputChange}
+                      name="description"
+                      id="textArea01"
+                      readOnly=""
+                      placeholder="Введите описание задачи..."
+                      defaultValue={card[0].description}
+                      disabled={true}
+                    />
+                  )}
+                  {isEdited && (
+                    <S.FormBrowseArea
+                      onChange={handleInputChange}
+                      name="description"
+                      id="textArea01"
+                      readOnly=""
+                      placeholder="Введите описание задачи..."
+                      defaultValue={card[0].description}
+                      disabled={false}
+                    />
+                  )}
+                </S.FormBrowseBlockDiv>
+              </S.PopBrowseForm>
 
-            <input
-              type="radio"
-              id="radio1"
-              name="topic"
-              value="Web Design"
-              onChange={handleInputChange}
-            />
-            <S.WebDesignLabel htmlFor="radio1">Web Design</S.WebDesignLabel>
+              <Calendar
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+              />
+            </S.PopBrowseWrapDiv>
+            {!isEdited && (
+              <S.BtnBrowseDiv>
+                <S.BtnGroupDiv>
+                  <S.BtnEdit
+                    onClick={() => {
+                      setIsEdited(!isEdited);
+                    }}
+                  >
+                    Редактировать задачу
+                  </S.BtnEdit>
 
-            <input
-              type="radio"
-              id="radio2"
-              name="topic"
-              value="Research"
-              onChange={handleInputChange}
-            />
-            <S.ResearchLabel htmlFor="radio2">Research</S.ResearchLabel>
+                  <S.BtnEdit
+                    onClick={deleteTask}
+                  >
+                    Удалить задачу
+                  </S.BtnEdit>
+                </S.BtnGroupDiv>
+                <Link to={appRoutes.MAIN}>
+                  <S.PopBrowseBtnExit>Закрыть</S.PopBrowseBtnExit>
+                </Link>
+              </S.BtnBrowseDiv>
+            )}
+            {isEdited && (
+              <S.BtnBrowseDiv>
+                <S.BtnGroupDiv>
+                  <S.BtnEdit
+                    onClick={handleFormSubmit}
+                  >
+                    Сохранить
+                  </S.BtnEdit>
+                  <S.BtnEdit
+                    onClick={() => {
+                      setIsEdited(!isEdited);
+                    }}
+                  >
+                    Отменить
+                  </S.BtnEdit>
 
-            <input
-              type="radio"
-              id="radio3"
-              name="topic"
-              value="Copywriting"
-              onChange={handleInputChange}
-            />
-            <S.CopywritingLabel htmlFor="radio3">Copywriting</S.CopywritingLabel>
-
-          </S.CategoriesThemes>
-          <S.ButtonDiv>
-            <S.FormNewCreateButton onClick={createTaskBtn} id="btnCreate">
-              Создать задачу
-            </S.FormNewCreateButton>
-          </S.ButtonDiv>
-        </S.PopNewCardBlock>
-      </S.PopNewCardContainer>
-    </S.PopNewCard>
+                  <S.BtnEdit
+                    onClick={deleteTask}
+                  >
+                    Удалить задачу
+                  </S.BtnEdit>
+                </S.BtnGroupDiv>
+                <Link to={appRoutes.MAIN}>
+                  <S.PopBrowseBtnExit>Закрыть</S.PopBrowseBtnExit>
+                </Link>
+              </S.BtnBrowseDiv>
+            )}
+          </S.PopBrowseContentDiv>
+        </S.PopBrowseBlockDiv>
+      </S.PopBrowseСonteinerDiv>
+    </S.PopBrowseDiv>
   );
 }
 
