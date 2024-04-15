@@ -5,4 +5,5 @@ export const appRoutes = {
     SIGNUP: '/signup',
     EXIT: '/exit',
     NOT_FOUND: '*',
+    CREATE: '/create',
 }

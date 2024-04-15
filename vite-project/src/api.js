@@ -18,13 +18,19 @@ export async function getTodos({ token }) {
 }
 
 // Добавить задачу в список
-export async function postTodo({ task, token }) {
+export async function postTodo({ token, taskData }) {
     const response = await fetch(baseHost, {
+        method: "POST",
         headers: {
             Authorization: `Bearer ${token}`,
         },
-        method: "POST",
-        body: JSON.stringify(task),
+        body: JSON.stringify({
+            "title": taskData.title,
+            "topic": taskData.topic,
+            "status": "Без статуса",
+            "description": taskData.description,
+            "date": taskData.date,
+        }),
     });
 
     if (!response.status === 201) {
@@ -36,16 +42,18 @@ export async function postTodo({ task, token }) {
 }
 
 // Изменить задачу
-export async function putTodo({ task, _id, token }) {
-    const response = await fetch(baseHost + `/${_id}`, {
+export async function putTodo({ token, id, taskData }) {
+    const response = await fetch(baseHost + `/${id}`, {
+        method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,
         },
-        method: "PUT",
         body: JSON.stringify({
-            task,
-            _id,
-            token,
+            "title": taskData.title,
+            "topic": taskData.topic,
+            "status": taskData.status,
+            "description": taskData.description,
+            "date": taskData.date,
         }),
     });
 
@@ -58,36 +66,15 @@ export async function putTodo({ task, _id, token }) {
 }
 
 // Удалить задачу
-export async function deleteTodo({ task, _id, token }) {
-    const response = await fetch(baseHost + `/${_id}`, {
+export async function deleteTodo({ id, token }) {
+    const response = await fetch(baseHost + `/${id}`, {
+        method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`,
         },
-        method: "DELETE",
-        body: JSON.stringify({
-            task,
-            _id,
-            token,
-        }),
     });
 
     if (!response.status === 201) {
-        throw new Error("Ошибка");
-    }
-
-    const data = await response.json();
-    return data;
-}
-
-// Получить список пользователя
-export async function getUserList(token) {
-    const response = await fetch(userHost, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
-
-    if (!response.status === 200) {
         throw new Error("Ошибка");
     }
 

@@ -6,6 +6,9 @@ import Column from '../../components/Column/Column';
 import { Outlet } from "react-router-dom";
 import { getTodos } from "../../api";
 import { useUser } from "../../hooks/useUser";
+import { useTask } from "../../hooks/useTask";
+import { GlobalStyle } from "../../App.styled";
+import { Wrapper } from "../../styled/common/Common.styled";
 
 const statusList = [
   "Без статуса",
@@ -16,45 +19,40 @@ const statusList = [
 ];
 
 export default function MainPage() {
-  const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true)
-  const {user} = useUser()
-  
+  const { user } = useUser();
+
+  const { cards, setCards } = useTask();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     getTodos({ token: user.token }).then((todos) => {
-      console.log(todos);
       setCards(todos.tasks);
       setIsLoading(false);
     }).catch((error) => {
       alert(error)
     })
-  }, [user])
+  }, [user, setCards]);
 
-  function addCard() {
-    const newCard = {
-      id: cards.length + 1,
-      theme: "Copywriting",
-      title: "Название задачи",
-      date: "30.10.23",
-      status: "Готово",
-    }
-    setCards([...cards, newCard])
-  }
   return (
     <>
-      <div className="wrapper">
-        <Outlet />
-        <Header addCard={addCard} />
-        {isLoading ? "Загрузка..." : (<MainContent>
-          {statusList.map((status) => (
-            <Column
-              title={status}
-              key={status}
-              cardList={cards.filter((card) => card.status === status)}
-            />
-          ))}
-        </MainContent>)}
-      </div>
+    <GlobalStyle />
+    <Wrapper>
+    <Outlet />
+      <Header/>
+      {isLoading ? (
+        "Загрузка..."
+      ) : (
+            <MainContent>
+              {statusList.map((status) => (
+                <Column
+                  title={status}
+                  key={status}
+                  cardList={cards.filter((card) => card.status === status)}
+                />
+              ))}
+            </MainContent>
+          )}
+    </Wrapper>
     </>
-  )
+  );
 }
