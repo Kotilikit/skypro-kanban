@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Main = styled.div`
   width: 100%;
   background-color: #EAEEF6;
+  transition: all 0.25s linear;
 `;
 
 export const MainBlock = styled.div`
@@ -11,13 +12,8 @@ export const MainBlock = styled.div`
   padding: 25px 0 49px;
 `;
 
-export const Cards = styled.div`
-  width: 100%;
-  display: block;
-  position: relative;
-`
 
 export const MainContent = styled.div`
   width: 100%;
   display: flex;
-`
+`;
