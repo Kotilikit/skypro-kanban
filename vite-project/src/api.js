@@ -33,8 +33,8 @@ export async function postTodo({ token, taskData }) {
         }),
     });
 
-    if (!response.status === 201) {
-        throw new Error("Ошибка");
+    if (response.status === 400) {
+        throw new Error("Заполнены не все поля");
     }
 
     const data = await response.json();
@@ -57,8 +57,8 @@ export async function putTodo({ token, id, taskData }) {
         }),
     });
 
-    if (!response.status === 201) {
-        throw new Error("Ошибка");
+    if (response.status === 400) {
+        throw new Error("Заполнены не все поля");
     }
 
     const data = await response.json();

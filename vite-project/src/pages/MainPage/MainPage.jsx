@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useEffect } from 'react'
 import Header from '../../components/Header/Header';
-import { MainContent } from '../../components/MainContent/MainContent.styled';
+import MainContent from '../../components/MainContent/MainContent';
 import Column from '../../components/Column/Column';
 import { Outlet } from "react-router-dom";
 import { getTodos } from "../../api";
